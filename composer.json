@@ -1,19 +1,25 @@
 {
-    "name": "orgelman/functions",
+    "name": "orgelman/orgelman",
+    "version": "dev-master",
     "type": "library",
     "description": "Functions is filed will good-to-have functions",
-    "minimum-stability": "dev",
-    "prefer-stable" : true,
     "authors": [
         {
             "name": "Tobias Jonson",
             "email": "git@orgelman.systems"
         }
     ],
+    "support": {
+        "email": "support@orgelman.systems",
+        "issues": "https://github.com/orgelman/orgelman/issues"
+    },
     "require": {
         "php": ">=5.0.0",
-        "cbschuld/browser.php": "*",
-        "greenlion/php-sql-parser": "*"
+        
+        "cbschuld/browser.php": "dev-master"
+    },
+    "suggest": {
+        "greenlion/php-sql-parser": "dev-master"
     },
     "autoload": {
         "classmap": [
