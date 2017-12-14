@@ -14,10 +14,8 @@
       "issues": "https://github.com/orgelman/orgelman/issues"
    },
    "suggest": {
-      "greenlion/php-sql-parser": "@dev"
-   },
-   "require": {
-      "orgelman/orgelman": "@dev"
+      "greenlion/php-sql-parser": "@dev",
+      "cbschuld/Browser.php": "@dev"
    },
    "autoload": {
       "classmap": [
