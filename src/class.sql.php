@@ -1,9 +1,10 @@
 <?php if(get_included_files()[0]==__FILE__){header("HTTP/1.1 403 Forbidden");die('<h1 style="font-family:arial;">Error 403: Forbidden</h1>');} 
 /**
- * @package orgelman/functions
- * @link    https://github.com/orgelman/functions/
- * @author  Tobias Jonson <git@orgelman.systmes>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
+ * @package    orgelman/functions
+ * @link       https://github.com/orgelman/orgelman/
+ * @composer   "orgelman/orgelman":"@dev"
+ * @author     Tobias Jonson <git@orgelman.systmes>
+ * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  *
  * -- 
  *
@@ -12,7 +13,7 @@
  * define("SQL_NAME"       , "database");
  * define("SQL_USERNAME"   , "username");
  * define("SQL_PASSWORD"   , "password");
- * define("SQL_PREFIX"     , "");
+ * define("SQL_PREFIX"     , "pre_");
  * define("SQL_SOCKET"     , "");
  * 
  * Examples:
@@ -31,9 +32,7 @@
  */
 
 use PHPSQLParser\PHPSQLParser;
-
 class orgelmanSQL {
-   
    public  $DBh            = "";
    public  $result         = array();
    
