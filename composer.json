@@ -1,27 +1,6 @@
 {
     "name": "orgelman/orgelman",
-    "description": "Functions is filed will good-to-have functions",
-    "authors": [
-        {
-            "name": "Tobias Jonson",
-            "email": "git@orgelman.systems"
-        }
-    ],
-    "support": {
-        "email": "support@orgelman.systems",
-        "issues": "https://github.com/orgelman/orgelman/issues"
-    },
     "require": {
         "cbschuld/browser.php": "@dev"
-    },
-    "suggest": {
-        "greenlion/php-sql-parser": "@dev"
-    },
-    "autoload": {
-        "classmap": [
-            "src/class.orgelmanFunctions.php",
-            "src/class.sql.php",
-            "src/class.text.php"
-        ]
     }
 }
