@@ -1,13 +1,17 @@
 <?php 
 /**
- * @package orgelman/functions
- * @link    https://github.com/orgelman/functions/
+ * @package orgelman/orgelman
+ * @link    https://github.com/orgelman/orgelman/
  * @author  Tobias Jonson <git@orgelman.systmes>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
+ * @license https://opensource.org/licenses/MIT The MIT License
  */
 
 $ds  = DIRECTORY_SEPARATOR;
 $dir = __dir__.$ds;
+
+if(file_exists($dir."include".$ds."autoload.php")) {
+   require_once ($dir."include".$ds."autoload.php"); 
+}
 if(file_exists($dir."src".$ds."class.orgelmanFunctions.php")) {
    require_once ($dir."src".$ds."class.orgelmanFunctions.php"); 
 }
