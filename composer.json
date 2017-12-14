@@ -1,27 +1,30 @@
 {
-    "name": "orgelman/orgelman",
-    "type": "library",
-    "version": "dev-master",
-    "description": "Functions is filed will good-to-have functions",
-    "authors": [
-        {
-            "name": "Tobias Jonson",
-            "email": "git@orgelman.systems"
-        }
-    ],
-    "support": {
-        "email": "support@orgelman.systems",
-        "issues": "https://github.com/orgelman/orgelman/issues"
-    },
-    "suggest": {
-        "greenlion/php-sql-parser": "@dev"
-    },
-    "autoload": {
-        "classmap": [
-            "src/class.orgelmanFunctions.php",
-            "src/class.sql.php",
-            "src/class.text.php"
-        ]
-    },
-    "license": "MIT"
+   "name": "orgelman/orgelman",
+   "type": "library",
+   "version": "dev-master",
+   "description": "Functions is filed will good-to-have functions",
+   "authors": [
+      {
+         "name": "Tobias Jonson",
+         "email": "git@orgelman.systems"
+       }
+   ],
+   "support": {
+      "email": "support@orgelman.systems",
+      "issues": "https://github.com/orgelman/orgelman/issues"
+   },
+   "suggest": {
+      "greenlion/php-sql-parser": "@dev"
+   },
+   "require": {
+      "orgelman/orgelman": "@dev"
+   },
+   "autoload": {
+      "classmap": [
+         "src/class.orgelmanFunctions.php",
+         "src/class.sql.php",
+         "src/class.text.php"
+      ]
+   },
+   "license": "MIT"
 }
