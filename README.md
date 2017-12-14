@@ -1,6 +1,6 @@
-# Orgelman Functions
-[![Build Status](https://travis-ci.org/orgelman/functions.svg)](https://travis-ci.org/orgelman/functions)
-[![Latest Stable Version](https://poser.pugx.org/orgelman/functions/v/stable.svg)](https://packagist.org/packages/orgelman/functions) [![Total Downloads](https://poser.pugx.org/orgelman/functions/downloads)](https://packagist.org/packages/orgelman/functions) [![Latest Unstable Version](https://poser.pugx.org/orgelman/functions/v/unstable.svg)](https://packagist.org/packages/orgelman/functions) [![License](https://poser.pugx.org/orgelman/functions/license.svg)](https://packagist.org/packages/orgelman/functions)
+# Orgelman
+[![Build Status](https://travis-ci.org/orgelman/orgelman.svg)](https://travis-ci.org/orgelman/functions)
+[![Latest Stable Version](https://poser.pugx.org/orgelman/orgelman/v/stable.svg)](https://packagist.org/packages/orgelman/functions) [![Total Downloads](https://poser.pugx.org/orgelman/orgelman/downloads)](https://packagist.org/packages/orgelman/functions) [![Latest Unstable Version](https://poser.pugx.org/orgelman/orgelman/v/unstable.svg)](https://packagist.org/packages/orgelman/functions) [![License](https://poser.pugx.org/orgelman/orgelman/license.svg)](https://packagist.org/packages/orgelman/functions)
 
 ## Code Example
 
