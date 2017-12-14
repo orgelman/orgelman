@@ -29,7 +29,7 @@
  *
  * }
  */
-use ICal\ICal;
+
 use PHPSQLParser\PHPSQLParser;
 
 class orgelmanSQL {
@@ -118,6 +118,7 @@ class orgelmanSQL {
    }
    private function verify($q,$allow,$caller) {
       $parser = new PHPSQLParser($q);
+      $this->result[$this->start]["queryp"] = $parser;
       $i = 0;
       foreach($parser->parsed as $par => $val) {
          if($i==0) {
@@ -179,7 +180,8 @@ class orgelmanSQL {
       $sel     = "Select";
       $prefix  = "[[DB]]";
       $caller = debug_backtrace()[0];
-      $start = count($this->result)+1;
+      $this->start = count($this->result)+1;
+      $start = $this->start;
       
       if((is_array($q)) || (is_object($q))) {
          $query = "SELECT \n";
