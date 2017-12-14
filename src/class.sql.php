@@ -4,7 +4,7 @@
  * @link       https://github.com/orgelman/orgelman/
  * @composer   "orgelman/orgelman":"@dev"
  * @author     Tobias Jonson <git@orgelman.systmes>
- * @license    http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
+ * @license https://opensource.org/licenses/MIT The MIT License
  *
  * -- 
  *
