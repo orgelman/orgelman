@@ -20,5 +20,6 @@
             "src/class.sql.php",
             "src/class.text.php"
         ]
-    }
+    },
+    "license": "MIT"
 }
