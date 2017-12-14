@@ -1,0 +1,27 @@
+{
+    "name": "orgelman/functions",
+    "type": "library",
+    "description": "Functions is filed will good-to-have functions",
+    "minimum-stability": "dev",
+    "prefer-stable" : true,
+    "authors": [
+        {
+            "name": "Tobias Jonson",
+            "email": "git@orgelman.systems"
+        }
+    ],
+    "require": {
+        "php": ">=5.0.0",
+        "cbschuld/browser.php": "*",
+        "greenlion/php-sql-parser": "*"
+    },
+    "autoload": {
+        "classmap": [
+            "src/class.browser.php",
+            "src/class.orgelmanFunctions.php",
+            "src/class.sql.php",
+            "src/class.text.php"
+        ]
+    },
+    "license": "LGPL-2.1"
+}

@@ -1,0 +1,237 @@
+.OMPM {
+   cursor: pointer !important;
+}
+#OMTF {
+   position: fixed !important;
+   bottom: 0 !important;
+   margin-bottom: 0 !important;
+   width: 100% !important;
+}
+#OMTF .panel {
+   position: initial;
+}
+#OMTF .panel-default > .panel-heading{
+   background: #00B4FF !important;
+}
+#OMTF .panel-heading {
+   padding: 0 !important;
+   border-top-left-radius: 0px !important;
+   border-top-right-radius: 0px !important;
+}
+#OMTF .panel-group .panel {
+   border-radius: 0 !important;
+}
+#OMTF .panel-title a {
+   cursor: pointer !important;
+   color: #FFFFFF !important;
+   text-align: center !important;
+   width: 100% !important;
+   display: block !important;
+   padding: 10px 15px !important;
+   font-size: 24px !important;
+   font-family: Helvetica,Arial,sans-serif !important;
+   outline: none !important;
+}
+#OMTF .panel-title a:hover, .panel-title a:focus, .panel-title a:active {
+   text-decoration: none !important;
+   outline: none !important;
+}
+#OMTF .panel-heading {
+   width: 4em !important;
+}
+#OMTF .panel.panel-default {
+   border: 0 !important;
+   background: none !important;
+}
+#OMCO {
+   background-color: #ffffff !important;
+}
+#OMTF .panel-heading i {
+   -webkit-transition: 0.5s !important; /* For Safari 3.1 to 6.0 */
+   transition: 0.5s !important;
+}
+#OMTF .panel-heading.open i {
+   -webkit-transform: rotate(180deg) !important; 
+   -moz-transform: rotate(180deg) !important;
+   -o-transform: rotate(180deg) !important;
+}
+#OMTF .panel-heading *, #OMTF .collapse.in {
+   pointer-events: auto !important;
+}
+#OMTF, #OMTF .panel-heading, #OMTF .panel-default {
+   pointer-events: none !important;
+}
+#OMCO #player .background {
+   position: absolute !important;
+   top: 0 !important;
+   bottom: 0 !important;
+   left: 0 !important;
+   right: 0 !important;
+   z-index: 0 !important;
+   background-position: center center !important;
+   background-repeat: no-repeat !important;
+   background-size: cover !important;
+   pointer-events: none !important;
+   opacity: 0.5 !important;
+    
+   -webkit-filter: grayscale(100%) !important; /* Safari 6.0 - 9.0 */
+   filter: grayscale(100%) !important;
+}
+#OMCO #player .foreground * {
+   position: relative;
+   z-index: 1 !important;
+}
+#OMCO #player .jp-video-play {
+   display:none !important;
+   margin:0 !important;
+   height:0 !important;
+}
+#OMCO, #OMCO #player #jp-title, #OMCO #player #jp-artist {
+   font-family: sans-serif !important;
+}
+#OMCO .panel-body {
+   padding: 0 !important;
+   border: 0 !important;
+}
+#OMCO #player #jquery_jplayer_N {
+   display: none !important;
+}
+#OMCO #player #OMjPC {
+   width: 100% !important;
+   border: 0 !important;
+}
+#OMCO #player .jp-playlist {
+   display:none !important;
+}
+#OMCO #player .jp-interface {
+   border: 0 !important;
+}
+#OMCO #player .jp-controls {
+   height: 42px !important;
+   width: 175px !important;
+   margin: 0 !important;
+}
+#OMCO #player .jp-controls-holder {
+   top: 0 !important;
+   width: 100% !important;
+   height: 40px !important;
+}
+#OMCO #player button.jp-load, #OMCO #player button.jp-play, #OMCO #player button.jp-pause, #OMCO #player button.jp-stop, #OMCO #player a.jp-alias, #OMCO #player a.jp-download {
+   padding: 0 !important;
+   margin: 0 !important;
+   background: none !important;
+   text-indent: inherit !important;
+   border: 1px solid #000 !important;
+   background-color: #fff !important;
+   float: none !important;
+   position: absolute !important;
+   top: 0 !important;
+   height: 40px !important;
+   width: 40px !important;
+   line-height: 40px !important;
+   text-align: center !important;
+   color: #666666 !important;
+}
+#OMCO #player button.jp-play:hover, #OMCO #player button.jp-pause:hover, #OMCO #player button.jp-stop:hover, #OMCO #player a.jp-alias:hover, #OMCO #player a.jp-download:hover {
+   background-color: #ccc !important;
+}
+#OMCO #player button.jp-load, #OMCO #player button.jp-play, #OMCO #player button.jp-pause {
+   left: 0 !important;
+}
+#OMCO #player button.jp-load {
+   z-index: 100 !important;
+   pointer-events: none !important;
+}
+#OMCO #player button.jp-stop {
+   left: 45px !important;
+}
+#OMCO #player a.jp-alias {
+   left: 90px !important;
+}
+#OMCO #player a.jp-download {
+   left: 135px !important;
+}
+#OMCO #player .jp-toggles {
+   position: initial !important;
+   margin: 0 !important;
+}
+#OMCO #player button.jp-repeat {
+   padding: 0;
+   margin: 0;
+   background: none;
+   text-indent: inherit;
+   border: 1px solid black;
+   background-color: #fff;
+   float: none;
+   position: absolute;
+   right: 0;
+   top: 0;
+   height: 18px;
+   width: 18px;
+}
+#OMCO #player .jp-volume-controls {
+   padding: 0;
+   margin: 0;
+   background: none;
+   text-indent: inherit;
+   border: 1px solid black;
+   background-color: #fff;
+   float: none;
+   position: absolute;
+   right: 0;
+   top: 22px;
+   left: initial;
+   height: 18px;
+   width: 94px;
+}
+#OMCO #player .jp-volume-controls button {
+   padding: 0;
+   margin: 0;
+   background: none;
+   text-indent: inherit;
+   position: absolute;
+   left: initial;
+   line-height: 14px;
+   font-size: 14px;
+}
+#OMCO #player .jp-volume-controls .jp-mute {
+   left:0;
+}
+#OMCO #player .jp-volume-controls .jp-volume-max {
+   right:0;
+}
+#OMCO #player .jp-progress {
+   height: 20px;
+}
+#OMCO #player .jp-seek-bar {
+   width: 100%;
+   background: none;
+}
+#OMCO #player .jp-play-bar {
+   background: none;
+}
+#OMCO #player .details {
+   padding: 1em;
+}
+#OMCO #player .jp-volume-bar-value, #OMCO #player .jp-volume-bar-value {
+   background-image: none;
+}
+#OMCO #player #jp-title {
+   font-size: 14px;
+   font-weight: bold;
+   text-overflow: ellipsis;
+   overflow: hidden;
+   white-space: nowrap;
+   padding-left: 2px;
+}
+#OMCO #player #jp-artist, #OMCO #player .details div {
+   font-size: 12px;
+   font-weight: normal;
+   text-overflow: ellipsis;
+   overflow: hidden;
+   white-space: nowrap;
+   padding-left: 2px;
+}
+.details, .jp-current-time, .jp-duration {
+   text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+}
