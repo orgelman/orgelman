@@ -11,9 +11,6 @@
         "email": "support@orgelman.systems",
         "issues": "https://github.com/orgelman/orgelman/issues"
     },
-    "require": {
-        "cbschuld/browser.php": "@dev"
-    },
     "suggest": {
         "greenlion/php-sql-parser": "@dev"
     },
