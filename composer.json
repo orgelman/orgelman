@@ -1,19 +1,25 @@
 {
-   "name": "orgelman/orgelman",
-   "type": "library",
-   "version": "dev-master",
-   "description": "Functions is filed will good-to-have functions",
    "authors": [
       {
          "name": "Tobias Jonson",
          "email": "git@orgelman.systems"
        }
    ],
+   
+   "name": "orgelman/orgelman",
+   "type": "library",
+   "version": "dev-master",
+   "description": "Functions is filed will good-to-have functions",
+
    "support": {
       "email": "support@orgelman.systems",
       "issues": "https://github.com/orgelman/orgelman/issues"
    },
-   "suggest": {
+   "config": {
+      "vendor-dir": "include"
+   },
+   
+   "require": {
       "greenlion/php-sql-parser": "@dev",
       "cbschuld/Browser.php": "@dev"
    },
@@ -24,5 +30,5 @@
          "src/class.text.php"
       ]
    },
-   "license": "MIT"
+   "license": "GPLv3"
 }
