@@ -14,9 +14,6 @@ if(file_exists($dir."src".$ds."class.orgelmanFunctions.php")) {
 if(file_exists($dir."src".$ds."class.text.php")) {
    require_once ($dir."src".$ds."class.text.php"); 
 }
-if(file_exists($dir."src".$ds."class.browser.php")) {
-   require_once ($dir."src".$ds."class.browser.php"); 
-}
 if(file_exists($dir."src".$ds."class.sql.php")) {
    require_once ($dir."src".$ds."class.sql.php"); 
 }
