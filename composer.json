@@ -1,5 +1,7 @@
 {
     "name": "orgelman/orgelman",
+    "type": "library",
+    "version": "dev-master",
     "description": "Functions is filed will good-to-have functions",
     "authors": [
         {
