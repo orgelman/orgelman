@@ -96,9 +96,11 @@ class orgelmanSQL {
          $DBh = "";
          $DBh = @mysqli_connect(SQL_HOST,SQL_USERNAME,SQL_PASSWORD,SQL_NAME) or die("SQL ERROR (".__LINE__."): Connection error: ".__LINE__);
          if (mysqli_connect_errno()) {
+            trigger_error('SQL ERROR ('.__LINE__.'): Connection error',E_USER_ERROR);
             die("SQL ERROR (".__LINE__."): Connection error: ".__LINE__);
          }
          if($DBh=="") {
+            trigger_error('SQL ERROR ('.__LINE__.'): Connection error',E_USER_ERROR);
             die("SQL ERROR (".__LINE__."): Connection error: ".__LINE__);
          }
       }
@@ -122,6 +124,7 @@ class orgelmanSQL {
       foreach($parser->parsed as $par => $val) {
          if($i==0) {
             if(trim(strtolower($par)) != trim(strtolower($allow))) {
+               trigger_error('SQL ERROR ('.__LINE__.'): String type not match',E_USER_ERROR);
                die("SQL ERROR (".__LINE__."): ".$q."<br>\nString type not match<hr>\nCalled: ". $caller["file"]." [".$caller["line"]."]");
             }
          }
@@ -130,22 +133,28 @@ class orgelmanSQL {
       unset($i);
 
       if(strtolower(substr(trim($q), 0, strlen("drop"))) === strtolower("drop")) {
+         trigger_error('SQL ERROR ('.__LINE__.'): Can not drop table',E_USER_ERROR);
          die("SQL ERROR (".__LINE__."): ".$q."<br>\nCan not drop table<hr>\nCalled: ". $caller["file"]." [".$caller["line"]."]");
       }
       if(strtolower(substr(trim($q), 0, strlen("trunkate"))) === strtolower("trunkate")) {
+         trigger_error('SQL ERROR ('.__LINE__.'): Can not trunkate table',E_USER_ERROR);
          die("SQL ERROR (".__LINE__."): ".$q."<br>\nCan not trunkate table<hr>\nCalled: ". $caller["file"]." [".$caller["line"]."]");
       }
       if(strtolower(substr(trim($q), 0, strlen("alter"))) === strtolower("alter")) {
+         trigger_error('SQL ERROR ('.__LINE__.'): Can not alter table',E_USER_ERROR);
          die("SQL ERROR (".__LINE__."): ".$q."<br>\nCan not alter table<hr>\nCalled: ". $caller["file"]." [".$caller["line"]."]");
       }
       if((strtolower(substr(trim($q), 0, strlen($allow))) === strtolower($allow)) && ((substr(trim($q), -1) === ';'))) {
          return $q;
       } else {
          if(strtolower(substr(trim($q), 0, strlen($allow))) !== strtolower($allow)) {
+            trigger_error('SQL ERROR ('.__LINE__.'): String type not match',E_USER_ERROR);
             die("SQL ERROR (".__LINE__."): ".$q."<br>\nString type not match<hr>\nCalled: ". $caller["file"]." [".$caller["line"]."]");
          } elseif(substr(trim($q), -1) !== ';') {
+            trigger_error('SQL ERROR ('.__LINE__.'): String end not match',E_USER_ERROR);
             die("SQL ERROR (".__LINE__."): ".$q."<br>\nString end not match<hr>\nCalled: ". $caller["file"]." [".$caller["line"]."]");
          } else {
+            trigger_error('SQL ERROR ('.__LINE__.'): Unknown Error',E_USER_ERROR);
             die("SQL ERROR (".__LINE__."): ".$q."<br>\nUnknown Error<hr>\nCalled: ". $caller["file"]." [".$caller["line"]."]");
          }
          return false;
@@ -187,6 +196,7 @@ class orgelmanSQL {
          $i=0;
          foreach($q as $v => $qu) {
             if(strpos($qu, $prefix) == false) {
+               trigger_error('SQL ERROR ('.__LINE__.'): Missing '.$prefix,E_USER_ERROR);
                die("SQL ERROR (".__LINE__."): Missing ".$prefix." Called: ". $caller["file"]." [".$caller["line"]."]");
             }
             if($qu!="") {
@@ -207,6 +217,7 @@ class orgelmanSQL {
          $q = $query.";";
       } else {
          if(strpos($q, $prefix) == false) {
+            trigger_error('SQL ERROR ('.__LINE__.'): Missing '.$prefix,E_USER_ERROR);
             die("SQL ERROR (".__LINE__."): Missing ".$prefix." Called: ". $caller["file"]." [".$caller["line"]."]");
          }
          if($q!="") {
@@ -230,6 +241,7 @@ class orgelmanSQL {
 
          if(strtolower(substr($q, 0, strlen($sel))) === strtolower($sel)) {
             if(!$MySQLi[0]["Result"]) {
+               trigger_error('SQL ERROR ('.__LINE__.'): SQL ERROR '.$this->DBh->error,E_USER_ERROR);
                die("SQL ERROR (".__LINE__."): ".$q."<br>\nSQL ERROR (".__LINE__."): ".$this->DBh->error);
             } elseif($MySQLi[0]["Result"]->num_rows>0) {
                while($MySQLi[0]["Rows"]=$MySQLi[0]["Result"]->fetch_object()){
@@ -247,6 +259,7 @@ class orgelmanSQL {
             }
          } else {
             if(!$MySQLi[0]["Result"]) {
+               trigger_error('SQL ERROR ('.__LINE__.'): SQL ERROR '.$this->DBh->error,E_USER_ERROR);
                die("SQL ERROR (".__LINE__."): ".$q."<br>\nSQL ERROR (".__LINE__."): ".$this->DBh->error);
                $this->result[$start]["status"] = 0;
                $this->result[$start]["rows"] = array();
