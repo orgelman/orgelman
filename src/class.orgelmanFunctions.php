@@ -1,16 +1,16 @@
 <?php 
 /**
- * @package orgelman/functions
- * @link    https://github.com/orgelman/functions/
- * @author  Tobias Jonson <git@orgelman.systmes>
+ * @package orgelman/orgelman
+ * @link    https://github.com/orgelman/orgelman/
+ * @author  Tobias Jonson <git@orgelman.systems>
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
 if(get_included_files()[0]==__FILE__){header("HTTP/1.1 403 Forbidden");die('<h1 style="font-family:arial;">Error 403: Forbidden</h1>');} 
 
 class orgelmanFunctions {
-   private $version                 = "0.3.2";
-   private $update                  = "https://github.com/orgelman/functions/releases";
+   private $version                 = "0.3.3";
+   private $update                  = "https://github.com/orgelman/orgelman/releases";
    
    private $root                    = "";
    private $path                    = "";
@@ -28,12 +28,12 @@ class orgelmanFunctions {
       }
    }
    public function verify() {
-      if(md5_file(__FILE__) != @file_get_contents("https://server.orgelman.systems/orgelman/functions/md5.php")) {
+      if(md5_file(__FILE__) != @file_get_contents("https://server.orgelman.systems/orgelman/orgelman/md5.php")) {
          
          if(!$this->client->console) {
-            $this->error("<strong>orgelman/functions Outdated</strong><br>Update: ".$this->update."<br><br>");
+            $this->error("<strong>orgelman/orgelman Outdated</strong><br>Update: ".$this->update."<br><br>");
          } else {
-            $this->error("orgelman/functions Outdated\nUpdate: ".$this->update);
+            $this->error("orgelman/orgelman Outdated\nUpdate: ".$this->update);
          }
          return false;
       }
@@ -57,7 +57,7 @@ class orgelmanFunctions {
       $this->path                   = $path;
    }
    
-   public function get_domain($root="",$path="") {
+   public function get_domain($root="",$path="",$lang="") {
       $this->server                 = new stdClass();
       $this->server->root           = "";
       $this->server->domain         = "";
@@ -96,6 +96,7 @@ class orgelmanFunctions {
          $path = $path."/";
       }
       $path = trim($path,"/")."/";
+      $lang = trim($lang,"/")."/";
       
       $this->server->root = trim(str_replace(array("/","\\"),DIRECTORY_SEPARATOR,DIRECTORY_SEPARATOR.trim($root,"/").DIRECTORY_SEPARATOR));
       if(!file_exists($this->server->root)) {
@@ -156,6 +157,7 @@ class orgelmanFunctions {
          }
          
          $this->server->URI         = ltrim($_SERVER["REQUEST_URI"],"/");
+         $this->server->Language    = ltrim($lang,"/");
          
          if (substr($this->server->URI, 0, strlen($this->server->dir)) == $this->server->dir) {
             $this->server->URI      = ltrim(substr(trim(trim($_SERVER["REQUEST_URI"],"/")), strlen(trim(trim($this->server->dir,"/")))),"/");
@@ -192,7 +194,10 @@ class orgelmanFunctions {
                foreach($qust as $get) {
                   $gets = explode("=",$get);
                   $key  = $gets[0];
-                  $get  = $gets[1];
+                  $get  = true;
+                  if(isset($gets[1])) {
+                     $get  = $gets[1];
+                  }
                   $new  = explode("?",$get);
                   if(count($new)>1) {
                      foreach($new as $nget) {
@@ -237,7 +242,7 @@ class orgelmanFunctions {
       $this->server->URI         = ltrim($_SERVER["REQUEST_URI"],"/");
          
       if (substr($this->server->URI, 0, strlen($this->server->dir)) == $this->server->dir) {
-         $this->server->URI      = ltrim(substr(trim(trim($_SERVER["REQUEST_URI"],"/")), strlen(trim(trim($this->server->dir,"/")))),"/");
+         $this->server->URI      = ltrim(substr(trim(trim($_SERVER["REQUEST_URI"],"/")), strlen(trim(trim($this->server->dir.$this->server->Language,"/")))),"/");
       } 
       
       $uri = $this->server->URI;
@@ -252,9 +257,9 @@ class orgelmanFunctions {
       $this->root                   = $this->server->root;
       $this->path                   = $this->server->dir;
       
-      $this->server->URI            = $uri.$this->set_domain_uri();
+      $this->server->URI            = $uri;
       $this->server->domain         = trim($this->server->domain.$this->server->dir,"/")."/";
-      $this->server->full           = $this->server->domain.$uri.$this->set_domain_uri();
+      $this->server->full           = $this->server->domain.$this->server->Language.$uri;
       
       return $this->server;
    }
@@ -293,7 +298,7 @@ class orgelmanFunctions {
       if(strpos($this->server->URI, '?') !== false) {
          $uri = substr($uri, 0, strpos($uri, "?"));
       }
-      $this->server->URI            = $uri.$q;
+      $this->server->URI            = $uri;
       $this->server->full           = $this->server->domain.$this->server->URI;
       
       return $q;
@@ -694,5 +699,3 @@ class orgelmanFunctions {
       return $zip->close();
    }
 }
-
-?>
