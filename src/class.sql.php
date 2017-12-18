@@ -164,7 +164,9 @@ class orgelmanSQL {
    public function insert($variable) {
       $old = array("  ");
       $new = array(" ");
-      $variable = $this->DBh->real_escape_string(str_replace($old,$new,trim(urldecode($variable))));
+      if(isset($this->DBh)) {
+         $variable = $this->DBh->real_escape_string(str_replace($old,$new,trim(urldecode($variable))));
+      }
       
       return $variable; 
    }
