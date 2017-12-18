@@ -242,7 +242,7 @@ class orgelmanFunctions {
       $this->server->URI         = ltrim($_SERVER["REQUEST_URI"],"/");
          
       if (substr($this->server->URI, 0, strlen($this->server->dir)) == $this->server->dir) {
-         $this->server->URI      = ltrim(substr(trim(trim($_SERVER["REQUEST_URI"],"/")), strlen(trim(trim($this->server->dir.$this->server->Language,"/")))),"/");
+         $this->server->URI      = ltrim(substr(trim(trim($_SERVER["REQUEST_URI"],"/")), strlen(trim(trim($this->server->dir.$this->server->language,"/")))),"/");
       } 
       
       $uri = $this->server->URI;
@@ -259,7 +259,7 @@ class orgelmanFunctions {
       
       $this->server->URI            = $uri;
       $this->server->domain         = trim($this->server->domain.$this->server->dir,"/")."/";
-      $this->server->full           = $this->server->domain.$this->server->Language.$uri;
+      $this->server->full           = $this->server->domain.$this->server->language.$uri;
       
       return $this->server;
    }
