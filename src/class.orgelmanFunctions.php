@@ -96,7 +96,9 @@ class orgelmanFunctions {
          $path = $path."/";
       }
       $path = trim($path,"/")."/";
-      $lang = trim($lang,"/")."/";
+      if($lang!="") {
+         $lang = trim($lang,"/")."/";
+      }
       
       $this->server->root = trim(str_replace(array("/","\\"),DIRECTORY_SEPARATOR,DIRECTORY_SEPARATOR.trim($root,"/").DIRECTORY_SEPARATOR));
       if(!file_exists($this->server->root)) {
@@ -241,8 +243,10 @@ class orgelmanFunctions {
       
       $this->server->URI         = ltrim($_SERVER["REQUEST_URI"],"/");
          
-      if (substr($this->server->URI, 0, strlen($this->server->dir)) == $this->server->dir) {
-         $this->server->URI      = ltrim(substr(trim(trim($_SERVER["REQUEST_URI"],"/")), strlen(trim(trim($this->server->dir.$this->server->language,"/")))),"/");
+      if ((substr($this->server->URI, 0, strlen($this->server->dir)) == $this->server->dir) && ($this->server->language!="")) {
+         if(substr($this->server->URI, 0, strlen($this->server->language)) === $this->server->language) {
+            $this->server->URI      = ltrim(substr(trim(trim($_SERVER["REQUEST_URI"],"/")), strlen(trim(trim($this->server->dir.$this->server->language,"/")))),"/");
+         }
       } 
       
       $uri = $this->server->URI;
