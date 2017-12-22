@@ -171,7 +171,7 @@ class orgelmanText {
       return $encrypted;
    }
    public function generateHash($password, $user) {
-      $user = strtolower($user);
+      $user = $this->toAscii(strtolower($user));
       if (defined("CRYPT_BLOWFISH") && CRYPT_BLOWFISH) {
          $salt = '$2y$11$' . substr(md5(uniqid(rand(), true)), 0, $this->saltMaxLength);
          $hash = crypt($password, $salt);
@@ -179,7 +179,7 @@ class orgelmanText {
       return $hash;
    }
    public function verifyHash($password, $hashedPassword, $user) {
-      $user = strtolower($user);
+      $user = $this->toAscii(strtolower($user));
       
       return crypt($password, $hashedPassword) == $hashedPassword;
    }
