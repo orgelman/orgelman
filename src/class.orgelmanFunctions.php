@@ -187,10 +187,12 @@ class orgelmanFunctions {
             if (substr(trim($_SERVER["REQUEST_URI"],"/"), 0, strlen($this->server->dir)) == trim($this->server->dir,"/")) {
                $_SERVER["REQUEST_URI"]      = ltrim(substr(trim(trim($_SERVER["REQUEST_URI"],"/")), strlen(trim(trim($this->server->dir,"/")))),"/");
             } 
+            $afterQustion = "";
             if(strpos($_SERVER["REQUEST_URI"], '?') !== false) {
                $qust  = substr($_SERVER["REQUEST_URI"], strpos($_SERVER["REQUEST_URI"], "?") + 1);
                $quest = explode("?",$qust);
                $qust  = implode ("&",$quest);
+               $afterQustion = $qust;
                $qust  = explode("&",$qust);
          
                foreach($qust as $get) {
@@ -240,7 +242,7 @@ class orgelmanFunctions {
             }
          }
       }
-      
+      $this->server->vars        = $afterQustion;
       $this->server->URI         = ltrim($_SERVER["REQUEST_URI"],"/");
          
       if ((substr($this->server->URI, 0, strlen($this->server->dir)) == $this->server->dir) && ($this->server->language!="")) {
@@ -258,10 +260,15 @@ class orgelmanFunctions {
       if(strpos($this->server->URI, '?') !== false) {
          $uri = substr($uri, 0, strpos($uri, "?"));
       }
+      
+      if(strtolower(trim($uri,"/")) == strtolower(trim($this->server->language,"/"))) {
+         $uri = "";
+      }
+      
       $this->root                   = $this->server->root;
       $this->path                   = $this->server->dir;
       
-      $this->server->URI            = $uri;
+      $this->server->URI            = $uri."?".$this->server->vars;
       $this->server->domain         = trim($this->server->domain.$this->server->dir,"/")."/";
       $this->server->full           = $this->server->domain.$this->server->language.$uri;
       
