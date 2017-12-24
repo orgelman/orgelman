@@ -174,11 +174,26 @@ class orgelmanSQL {
       if(isset($_REQUEST[$str])) {
          return true;
       } 
+      if(isset($_GET[$str])) {
+         $_REQUEST[$str] = $_GET[$str];
+         return true;
+      }
+      if(isset($_POST[$str])) {
+         $_REQUEST[$str] = $_POST[$str];
+         return true;
+      }
       return false;
    }
    public function getRequest($str="") {
+      $deb = debug_backtrace()[0];
       if(isset($_REQUEST[$str])) {
          $str = $this->insert($_REQUEST[$str]);
+      } elseif(isset($_GET[$str])) {
+         $_REQUEST[$str] = $_GET[$str];
+         $str = $this->insert($_GET[$str]);
+      } elseif(isset($_POST[$str])) {
+         $_REQUEST[$str] = $_POST[$str];
+         $str = $this->insert($_POST[$str]);
       } else {
          trigger_error("Variable '".$str."' not found", E_USER_ERROR);
          return false;
