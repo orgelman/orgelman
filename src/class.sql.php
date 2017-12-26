@@ -195,7 +195,7 @@ class orgelmanSQL {
          $_REQUEST[$str] = $_POST[$str];
          $str = $this->insert($_POST[$str]);
       } else {
-         trigger_error("Variable '".$str."' not found", E_USER_ERROR);
+         trigger_error("Variable '".$str."' not found<br>\n".$deb["file"]." [".$deb["line"]."]", E_USER_ERROR);
          return false;
       }
       return $str; 
@@ -258,8 +258,8 @@ class orgelmanSQL {
 
          if(strtolower(substr($q, 0, strlen($sel))) === strtolower($sel)) {
             if(!$MySQLi[0]["Result"]) {
-               trigger_error('SQL ERROR ('.__LINE__.'): SQL ERROR '.$this->DBh->error,E_USER_ERROR);
-               die("SQL ERROR (".__LINE__."): ".$q."<br>\nSQL ERROR (".__LINE__."): ".$this->DBh->error);
+               trigger_error('SQL ERROR ('.__LINE__.'): SQL ERROR '.$this->DBh->error."<br>\n".$caller["file"]." [".$caller["line"]."]",E_USER_ERROR);
+               die("SQL ERROR (".__LINE__."): ".$q."<br>\nSQL ERROR (".__LINE__."): ".$this->DBh->error."<br>\n".$caller["file"]." [".$caller["line"]."]");
             } elseif($MySQLi[0]["Result"]->num_rows>0) {
                while($MySQLi[0]["Rows"]=$MySQLi[0]["Result"]->fetch_object()){
                   $arr[] = $MySQLi[0]["Rows"];
@@ -276,8 +276,8 @@ class orgelmanSQL {
             }
          } else {
             if(!$MySQLi[0]["Result"]) {
-               trigger_error('SQL ERROR ('.__LINE__.'): SQL ERROR '.$this->DBh->error,E_USER_ERROR);
-               die("SQL ERROR (".__LINE__."): ".$q."<br>\nSQL ERROR (".__LINE__."): ".$this->DBh->error);
+               trigger_error('SQL ERROR ('.__LINE__.'): SQL ERROR '.$this->DBh->error."<br>\n".$caller["file"]." [".$caller["line"]."]",E_USER_ERROR);
+               die("SQL ERROR (".__LINE__."): ".$q."<br>\nSQL ERROR (".__LINE__."): ".$this->DBh->error."<br>\n".$caller["file"]." [".$caller["line"]."]");
                $this->result[$start]["status"] = 0;
                $this->result[$start]["rows"] = array();
                return array();
