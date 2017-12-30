@@ -1,365 +1,190 @@
-<?php if(get_included_files()[0]==__FILE__){header("HTTP/1.1 403 Forbidden");die('<h1 style="font-family:arial;">Error 403: Forbidden</h1>');} 
+<?php 
 /**
- * @package    orgelman/functions
- * @link       https://github.com/orgelman/orgelman/
- * @composer   "orgelman/orgelman":"@dev"
- * @author     Tobias Jonson <git@orgelman.systmes>
- * @license https://opensource.org/licenses/MIT The MIT License
- *
- * -- 
- *
- * define("SQL_HOST"       , "host");
- * define("SQL_PORT"       , "port");
- * define("SQL_NAME"       , "database");
- * define("SQL_USERNAME"   , "username");
- * define("SQL_PASSWORD"   , "password");
- * define("SQL_PREFIX"     , "pre_");
- * define("SQL_SOCKET"     , "");
- * 
- * Examples:
- * Check if _POST or _GET ["variable"] exists then load it or leave str empty
- * $str = ($sql->isRequest("variable") ? $sql->getRequest("variable") : "");
- *
- * Query:
- *            Måste inehålla [[DB]]                                         och ; i slutet och om det är något annat än SELECT måste det anges
- * $sql->SQL("SELECT * FROM `[[DB]]calendar` WHERE (`Uid` != '".$str."') LIMIT 1;");
- * $sql->SQL("INSERT INTO `[[DB]]calendar` WHERE (`Uid` != '".$str."') LIMIT 1;","insert");
- *
- * SELECT query loop throug results
- * foreach($sql->SQL("SELECT * FROM `[[DB]]calendar` WHERE (`Uid` != '".$str."') LIMIT 1;") as $row) {
- *
- * }
+ * @package orgelman/functions
+ * @link    https://github.com/orgelman/functions/
+ * @author  Tobias Jonson <git@orgelman.systmes>
+ * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
-use PHPSQLParser\PHPSQLParser;
-class orgelmanSQL {
-   public  $DBh            = "";
-   public  $result         = array();
-   
-   private $SQL_HOST       = "";
-   private $SQL_USERNAME   = "";
-   private $SQL_PASSWORD   = "";
-   private $SQL_NAME       = "";
-   private $SQL_PREFIX     = "";
-   private $SQL_SOCKET     = "";
-   
-   public function __construct($SQL_HOST="",$SQL_USERNAME="",$SQL_PASSWORD="",$SQL_NAME="",$SQL_PREFIX="",$SQL_SOCKET="") {
-      //Setting SQL constants
-      if(defined("SQL_HOST")) {
-         $this->SQL_HOST      = constant("SQL_HOST");
-      } else {
-         $this->SQL_HOST      = $SQL_HOST;
-         define("SQL_HOST",$this->SQL_HOST);
-      }
-      if(defined("SQL_USERNAME")) {
-         $this->SQL_USERNAME  = constant("SQL_USERNAME");
-      } else {
-         $this->SQL_USERNAME  = $SQL_USERNAME;
-         define("SQL_USERNAME",$this->SQL_USERNAME);
-      }
-      if(defined("SQL_PASSWORD")) {
-         $this->SQL_PASSWORD  = constant("SQL_PASSWORD");
-      } else {
-         $this->SQL_PASSWORD  = $SQL_PASSWORD;
-         define("SQL_PASSWORD",$this->SQL_PASSWORD);
-      }
-      if(defined("SQL_NAME")) {
-         $this->SQL_NAME      = constant("SQL_NAME");
-      } else {
-         $this->SQL_NAME      = $SQL_NAME;
-         define("SQL_NAME",$this->SQL_NAME);
-      }
-      if(defined("SQL_PREFIX")) {
-         $this->SQL_PREFIX    = constant("SQL_PREFIX");
-      } else {
-         $this->SQL_PREFIX    = $SQL_PREFIX;
-         define("SQL_PREFIX",$this->SQL_PREFIX);
-      }
-      if(defined("SQL_SOCKET")) {
-         $this->SQL_SOCKET    = constant("SQL_SOCKET");
-      } else {
-         $this->SQL_SOCKET    = $SQL_SOCKET;
-         define("SQL_SOCKET",$this->SQL_SOCKET);
-      }
-      
-      $this->DBh = $this->StartDBConnection();
-   }
-   public function __destruct() {
-      $this->StopDBConnection();
-   }
-   
-   public function StartDBConnection() {
-      $DBh = false;
-      if((isset($DBh)) && ($DBh!="")) { 
-            
-      } else {
-         $DBh = "";
-         $DBh = @mysqli_connect(SQL_HOST,SQL_USERNAME,SQL_PASSWORD,SQL_NAME) or die("SQL ERROR (".__LINE__."): Connection error: ".__LINE__);
-         if (mysqli_connect_errno()) {
-            trigger_error('SQL ERROR ('.__LINE__.'): Connection error',E_USER_ERROR);
-            die("SQL ERROR (".__LINE__."): Connection error: ".__LINE__);
-         }
-         if($DBh=="") {
-            trigger_error('SQL ERROR ('.__LINE__.'): Connection error',E_USER_ERROR);
-            die("SQL ERROR (".__LINE__."): Connection error: ".__LINE__);
-         }
-      }
-      
-      $this->DBh = $DBh;
-      return $DBh;
-   }
-   public function StopDBConnection(){
-      if((isset($this->DBh)) && ($this->DBh!="")) { 
-         @mysqli_close($this->DBh);
-      }
-   }
-   private function wash($q) {
-      
-      return $q;
-   }
-   private function verify($q,$allow,$caller) {
-      $parser = new PHPSQLParser($q);
-      $this->result[$this->start]["queryp"] = $parser;
-      $i = 0;
-      foreach($parser->parsed as $par => $val) {
-         if($i==0) {
-            if(trim(strtolower($par)) != trim(strtolower($allow))) {
-               trigger_error('SQL ERROR ('.__LINE__.'): String type not match',E_USER_ERROR);
-               die("SQL ERROR (".__LINE__."): ".$q."<br>\nString type not match<hr>\nCalled: ". $caller["file"]." [".$caller["line"]."]");
-            }
-         }
-         $i++;
-      }
-      unset($i);
+if(get_included_files()[0]==__FILE__){header("HTTP/1.1 403 Forbidden");die('<h1 style="font-family:arial;">Error 403: Forbidden</h1>');} 
 
-      if(strtolower(substr(trim($q), 0, strlen("drop"))) === strtolower("drop")) {
-         trigger_error('SQL ERROR ('.__LINE__.'): Can not drop table',E_USER_ERROR);
-         die("SQL ERROR (".__LINE__."): ".$q."<br>\nCan not drop table<hr>\nCalled: ". $caller["file"]." [".$caller["line"]."]");
-      }
-      if(strtolower(substr(trim($q), 0, strlen("trunkate"))) === strtolower("trunkate")) {
-         trigger_error('SQL ERROR ('.__LINE__.'): Can not trunkate table',E_USER_ERROR);
-         die("SQL ERROR (".__LINE__."): ".$q."<br>\nCan not trunkate table<hr>\nCalled: ". $caller["file"]." [".$caller["line"]."]");
-      }
-      if(strtolower(substr(trim($q), 0, strlen("alter"))) === strtolower("alter")) {
-         trigger_error('SQL ERROR ('.__LINE__.'): Can not alter table',E_USER_ERROR);
-         die("SQL ERROR (".__LINE__."): ".$q."<br>\nCan not alter table<hr>\nCalled: ". $caller["file"]." [".$caller["line"]."]");
-      }
-      if((strtolower(substr(trim($q), 0, strlen($allow))) === strtolower($allow)) && ((substr(trim($q), -1) === ';'))) {
-         return $q;
-      } else {
-         if(strtolower(substr(trim($q), 0, strlen($allow))) !== strtolower($allow)) {
-            trigger_error('SQL ERROR ('.__LINE__.'): String type not match',E_USER_ERROR);
-            die("SQL ERROR (".__LINE__."): ".$q."<br>\nString type not match<hr>\nCalled: ". $caller["file"]." [".$caller["line"]."]");
-         } elseif(substr(trim($q), -1) !== ';') {
-            trigger_error('SQL ERROR ('.__LINE__.'): String end not match',E_USER_ERROR);
-            die("SQL ERROR (".__LINE__."): ".$q."<br>\nString end not match<hr>\nCalled: ". $caller["file"]." [".$caller["line"]."]");
-         } else {
-            trigger_error('SQL ERROR ('.__LINE__.'): Unknown Error',E_USER_ERROR);
-            die("SQL ERROR (".__LINE__."): ".$q."<br>\nUnknown Error<hr>\nCalled: ". $caller["file"]." [".$caller["line"]."]");
+class orgelmanText {
+   private $key           = "asdyfhasugfwauisOUGSAD8hdfaegu";
+   private $secondKey     = "ajlgsd97asd";
+   
+   private $replaceNew    = array("Bi01010000NA","Bi00101101NA","Bi01010011NA","Bi01000010NA","Bi00100000NA","Bi00100110NA","Bi00111011NA","Bi00111010NA","Bi00111101NA","Bi00100010NA","Bi00100111NA","Bi01100000NA","Bi00100101NA","Bi00100100NA");
+   private $replaceOld    = array("+"           ,"-"           ,"/"           ,"\\"          ," "           ,"&"           ,";"           ,":"           ,"="           ,'"'           ,"'"           ,"`"           ,"%"           ,"$"           );
+   private $saltMaxLength = 255;
+   
+   private $debug         = false;
+   
+   public function __construct() {
+      $this->key        = $this->md5hash($this->key);
+      $this->secondKey  = $this->md5hash($this->secondKey);
+   }
+   
+   public function set_debug($bool) {
+      $this->debug = $bool;
+   }
+   public function set_key($str) {
+      $this->key        = $this->md5hash($str);
+   }
+   public function set_secondKey($str) {
+      $this->secondKey  = $this->md5hash($str);
+   }
+   
+   
+   
+   public function saveText_strip($str) {
+      $str = str_replace(array("\n","\r"), array("",""), $str);
+      $str = str_replace(array("<br>","<br />","<hr>","<hr />"), array("<br>","<br>","<hr>","<hr>"), $str);
+
+      return trim($this->saveText(strip_tags($str,'<br><hr>')));
+   }
+   public function saveText_stripStand($str) {
+      $str = str_replace(array("\n","\r"), array("",""), $str);
+      $str = str_replace(array("<br>","<br />","<hr>","<hr />"), array("<br>","<br>","<hr>","<hr>"), $str);
+      return trim($this->saveText(strip_tags($str,"<div><br><hr><ul><ol><li><p><h1><h2><h3><h4><h5><h6><small><span><big><sub><sup><i><em><b><strong><u><s><a><img><blockquote><cite><pre><code><samp><table><tbody><thead><tfoot><tr><td><th>")));
+   }
+   public function saveText_stripFull($str,$newline=0) {
+      if(is_array($str)) {
+         $new = "";
+         foreach($str as $st) {
+            $new .= " - ".$st;
          }
-         return false;
+         $str = $new;
       }
-      return false;
+      return trim($this->saveText(strip_tags($str),0,$newline));
    }
-   public function insert($variable) {
-      $old = array("  ");
-      $new = array(" ");
-      if(isset($this->DBh)) {
-         $variable = $this->DBh->real_escape_string(str_replace($old,$new,trim(urldecode($variable))));
-      }
+   public function saveText($str) {
+      $str                 = str_replace($this->replaceNew,$this->replaceOld,$str);
+      $str                 = str_replace(array("\n","\r","|"),array("<br>\n","","&#124;"),html_entity_decode(html_entity_decode($str)));
+      $str                 = str_replace(array("<br>","<br />","<hr>","<hr />"), array("<br>","<br>","<hr>","<hr>"), $str);
+      $str                 = preg_replace('/\s\s+/', ' ',$str);
+      $str                 = addslashes(utf8_encode(htmlentities(preg_replace('!\s+!', ' ', str_replace(array("\n","\r"),"",$str )))));
       
-      return $variable; 
+      $taglist             = array("");
+      preg_match_all("/<(\/|)([a-zA-Z1-9]{1,})(.*?)([a-zA-Z1-9]|\/| |'|\")>/xi", $str, $output_array);
+      
+      return trim($str);
    }
-   public function isRequest($str="") {
-      if(isset($_REQUEST[$str])) {
-         return true;
+   public function loadText($str) {
+      $str = stripslashes($str);
+      $e = explode("|",$str,2);
+      $str = $e[0];
+      if(isset($e[1])) {
+         $str = $e[1];
       } 
-      if(isset($_GET[$str])) {
-         $_REQUEST[$str] = $_GET[$str];
-         return true;
-      }
-      if(isset($_POST[$str])) {
-         $_REQUEST[$str] = $_POST[$str];
-         return true;
-      }
-      return false;
-   }
-   public function getRequest($str="") {
-      $deb = debug_backtrace()[0];
-      if(isset($_REQUEST[$str])) {
-         $str = $this->insert($_REQUEST[$str]);
-      } elseif(isset($_GET[$str])) {
-         $_REQUEST[$str] = $_GET[$str];
-         $str = $this->insert($_GET[$str]);
-      } elseif(isset($_POST[$str])) {
-         $_REQUEST[$str] = $_POST[$str];
-         $str = $this->insert($_POST[$str]);
-      } else {
-         trigger_error("Variable '".$str."' not found<br>\n".$deb["file"]." [".$deb["line"]."]", E_USER_ERROR);
-         return false;
-      }
-      return $str; 
-   }
-   public function SQL($q,$allow="select") { 
-      $arr     = array();
-      $sel     = "Select";
-      $prefix  = "[[DB]]";
-      $caller = debug_backtrace()[0];
-      $this->start = count($this->result)+1;
-      $start = $this->start;
       
-      if((is_array($q)) || (is_object($q))) {
-         $query = "SELECT \n";
-         $i=0;
-         foreach($q as $v => $qu) {
-            if(strpos($qu, $prefix) == false) {
-               trigger_error('SQL ERROR ('.__LINE__.'): Missing '.$prefix,E_USER_ERROR);
-               die("SQL ERROR (".__LINE__."): Missing ".$prefix." Called: ". $caller["file"]." [".$caller["line"]."]");
-            }
-            if($qu!="") {
-               $strpos = strpos($qu,$prefix);
-               if(substr($qu,($strpos-1),1) == "`") {
-                  $qu = str_replace($prefix,constant("SQL_NAME")."`.`".constant("SQL_PREFIX")."",$qu);
-               } else {
-                  $qu = str_replace($prefix,"`".constant("SQL_NAME")."`.`".constant("SQL_PREFIX")."",$qu);
+      $str = $this->decrypt($str,"savingtext");
+      if(strpos($str, '|') !== false) {
+         $tags          = explode("|",stripslashes($str));
+         $str           = str_replace("&amp;","&",$this->decrypt($tags[0],"savetextfi"));
+         $tag           = str_replace("&amp;","&",$this->decrypt($tags[1],"savetextse"));
+                  
+         $tags          = explode("|",stripslashes($tag));
+         
+         if(isset($tags[0])) {
+            foreach($tags as $n => $tag) {
+               if(strpos($tag, '/TA()XYX()GG/') !== false) {
+                  $replace = explode("/TA()XYX()GG/",$tag);
+                  
+                  $str     = str_replace($replace[0],html_entity_decode($replace[1]),$str);
                }
             }
-            $this->verify($qu,$allow,$caller);
-            if($i!=0) {
-               $query .= ",\n";
-            }
-            $query .= "   (".trim($qu,";").") as `".$v."`";
-            $i++;
-         }
-         $q = $query.";";
-      } else {
-         if(strpos($q, $prefix) == false) {
-            trigger_error('SQL ERROR ('.__LINE__.'): Missing '.$prefix,E_USER_ERROR);
-            die("SQL ERROR (".__LINE__."): Missing ".$prefix." Called: ". $caller["file"]." [".$caller["line"]."]");
-         }
-         if($q!="") {
-            $strpos = strpos($q,$prefix);
-            if(substr($q,($strpos-1),1) == "`") {
-               $q = str_replace($prefix,constant("SQL_NAME")."`.`".constant("SQL_PREFIX")."",$q);
-            } else {
-               $q = str_replace($prefix,"`".constant("SQL_NAME")."`.`".constant("SQL_PREFIX")."",$q);
-            }
-         }
-         $this->verify($q,$allow,$caller);
-      }
-      if($q!="") {
-         $q = $this->wash($q);
-         $this->verify($q,$allow,$caller);
-         if(isset($this->DBh)) {} else {
-            $this->DBh = $this->StartDBConnection();
-         }
-         $MySQLi[0]["Result"] = $this->DBh->query($q);
-         $this->result[$start]["query"] = $q;
-
-         if(strtolower(substr($q, 0, strlen($sel))) === strtolower($sel)) {
-            if(!$MySQLi[0]["Result"]) {
-               trigger_error('SQL ERROR ('.__LINE__.'): SQL ERROR '.$this->DBh->error."<br>\n".$caller["file"]." [".$caller["line"]."]",E_USER_ERROR);
-               die("SQL ERROR (".__LINE__."): ".$q."<br>\nSQL ERROR (".__LINE__."): ".$this->DBh->error."<br>\n".$caller["file"]." [".$caller["line"]."]");
-            } elseif($MySQLi[0]["Result"]->num_rows>0) {
-               while($MySQLi[0]["Rows"]=$MySQLi[0]["Result"]->fetch_object()){
-                  $arr[] = $MySQLi[0]["Rows"];
-               }
-               $this->result[$start]["status"] = 1;
-               $this->result[$start]["count"] = $MySQLi[0]["Result"]->num_rows;
-               $this->result[$start]["rows"] = $arr;
-               return $arr;
-            } elseif($MySQLi[0]["Result"]->num_rows==0) {
-               $this->result[$start]["status"] = 1;
-               $this->result[$start]["count"] = $MySQLi[0]["Result"]->num_rows;
-               $this->result[$start]["rows"] = array();
-               return array();
-            }
-         } else {
-            if(!$MySQLi[0]["Result"]) {
-               trigger_error('SQL ERROR ('.__LINE__.'): SQL ERROR '.$this->DBh->error."<br>\n".$caller["file"]." [".$caller["line"]."]",E_USER_ERROR);
-               die("SQL ERROR (".__LINE__."): ".$q."<br>\nSQL ERROR (".__LINE__."): ".$this->DBh->error."<br>\n".$caller["file"]." [".$caller["line"]."]");
-               $this->result[$start]["status"] = 0;
-               $this->result[$start]["rows"] = array();
-               return array();
-            }
-            $this->result[$start]["status"] = 1;
-            $this->result[$start]["count"] = mysqli_affected_rows($this->DBh);
-            $this->result[$start]["rows"] = array();
-            return array();
          }
       }
-      $this->result[$start]["status"] = 0;
-      $this->result[$start]["rows"] = array();
-      return array();
+      $str             = preg_replace('!\s+!', ' ', $str);
+      
+      return $this->shortCode(html_entity_decode($str));
    }
-   public function SQLBackup($tables = '*', $path = '', $title = '') {
-      $return = "";
-      if($tables!='*') {
-         $tables = "`".constant("SQL_PREFIX").$tables."`";
+   public function shortCode($str="",$over=false) {
+      $debug = $this->debug;
+      if($over) {
+         $debug = false;
       }
-      if($tables == '*') {
-         $tables = array();
-         $result = $this->DBh->query('SHOW TABLES');
-         while($row = mysqli_fetch_row($result)) {
-            $tables[] = $row[0];
-         }
-      } else {
-         $tables = is_array($tables) ? $tables : explode(',',$tables);
+      if(($str!="") && (!$debug)) {
+         $str = preg_replace("/(console.(...)\((\"|\')(.*)(\"|\'))\);/ix", "", $str);
+         $str = preg_replace("/<!--[^[if][^<![](.|\s)*?-->/", "", $str);
+         $str = preg_replace('!/\*.*?\*/!s', '', $str);
+         
+         $pattern = "/<li[^>]*><\\/li[^>]*>/"; 
+         //$pattern = "/<[^\/>]*>([\s]?)*<\/[^>]*>/";  use this pattern to remove any empty tag
+         $str = preg_replace($pattern, '', $str); 
+         
+         //$str = preg_replace('/\n\s*\n/', "\n", $str);
+         //$str = preg_replace('/\s+/', ' ',str_replace(array("  ","\n","\r"),array(" ","",""),$str));
+            
+         //$str = preg_replace("/>\s*</isx", "><", $str);
+         //$str = preg_replace("/;\s*/isx", ";", $str);
+         //$str = preg_replace("/\/\/?\s*\*[\s\S]*?\*\s*\/\/?/ix", "",$str);
+         $str = str_replace(array("\n","\r","console.log(obj);","console.log(data);"),"",preg_replace("/\s{2,}/", ' ',$str));
+            
+         $old= array('( ',' )','function ()',') {',', funct','if (','if(! ',' == ',' === '," != "," !== ",'", "',"', '",'(! ');
+         $new= array('(' ,')' ,'function()' ,'){' ,',funct' ,'if(' ,'if(!' ,'=='  ,'==='  ,"!="  ,"!=="  ,'","' ,"','" ,'(!' );
+           
+         //$str = str_replace($old,$new,$str);
+         
+         
+         //$str = preg_replace('/\s+/', ' ',$str);
+         //$str = preg_replace("/^\s/", ' ',$str);
+         //$str = trim($str);
       }
-
-      foreach($tables as $table) {
-         $result = $this->DBh->query('SELECT * FROM '.$table);
-         if(!is_bool($result)) {
-            $num_fields = mysqli_num_fields($result);
-
-            $return.= '-- phpMyAdmin SQL Dump'."\n";
-            $return.= '-- http://www.phpmyadmin.net'."\n"."\n";
-            $return.= '-- Generation Time '.date("Y-m-d H:i:s e")."\n"."\n";
-            $return.= '-- orgelman systems'."\n"."\n";
-            $return.= '--'."\n";
-            $return.= '-- Database: '.constant("SQL_NAME").''."\n";
-            $return.= '--'."\n"."\n";
-            $return.= '-- --------------------------------------------------------'."\n";
-            $return.= '--'."\n";
-            $return.= '-- Table structure for table '.$table."\n";
-            $return.= '--'."\n"."\n";
-
-            $return.= 'DROP TABLE IF EXISTS '.$table.';';
-            $row2 = mysqli_fetch_row($this->DBh->query('SHOW CREATE TABLE '.$table));
-            $return.= "\n\n".$row2[1].";\n\n";
-
-            $return.= '--'."\n";
-            $return.= '-- Dumping data for table '.$table."\n";
-            $return.= '--'."\n"."\n";
-
-            for ($i = 0; $i < $num_fields; $i++) {
-               while($row = mysqli_fetch_row($result)) {
-                  $return.= 'INSERT INTO '.$table.' VALUES(';
-                  for($j=0; $j < $num_fields; $j++) {
-                     $row[$j] = addslashes($row[$j]);
-                     $row[$j] = str_replace("\n","\\n",$row[$j]);
-                     if (isset($row[$j])) { $return.= '"'.$row[$j].'"' ; } else { $return.= '""'; }
-                     if ($j < ($num_fields-1)) { $return.= ','; }
-                  }
-                  $return.= ");\n";
-               }
-            }
-            $return.="\n\n\n";
-         }
-      }
-      if($path=="") {
-         $path = __DIR__;
-      }
-      if($title!="") {
-         $title = $title." ";
-      }
-      $paths = rtrim($path,"/").'/'.$this->toAscii($title).'db-backup-'.$this->toAscii(date("YmdHis")).'-'.(md5(implode(',',$tables))).'.sql';
-      $handle = fopen($paths,'w+');
-      fwrite($handle,$return);
-      fclose($handle);
-      return $paths;
+      $old= array('[[n]]');
+      $new= array("\n"   );
+      
+      $str = str_replace($old,$new,$str);
+      return stripslashes($str);
    }
    
+   
+   public function md5hash($str) {
+      return str_replace($this->replaceOld,$this->replaceNew,md5($str));
+   }
+   
+   public function encryptEmail($email) {
+      return trim($email);
+   }
+   public function decryptEmail($emailhash) {
+      if (strpos($emailhash,'@') !== false) {
+         return $emailhash;
+      } else {
+         return $emailhash;
+      }
+   } 
+   
+   public function encrypt($string, $key="", $prekey="") {
+      if($key=="") {
+         $key = $this->secondKey;
+      }
+      $prekey  = str_replace(" ","",$prekey);
+      $key     = str_replace(" ","",$key);
+      $u = substr(substr($this->toAscii(md5(uniqid())), 0, (10-strlen(substr($this->toAscii($prekey), 0, 10)))).substr($this->toAscii($prekey), 0, 10), 0, 10);
+      
+      if($string!="") {
+         $string = $string;
+      }
+      
+      return $string; 
+   }
+   public function decrypt($encrypted, $key="") {
+      return $encrypted;
+   }
+   public function generateHash($password, $user) {
+      $user = $this->toAscii(strtolower($user));
+      if (defined("CRYPT_BLOWFISH") && CRYPT_BLOWFISH) {
+         $salt = '$2y$11$' . substr(md5(uniqid(rand(), true)), 0, $this->saltMaxLength);
+         $hash = crypt($password, $salt);
+      }
+      return $hash;
+   }
+   public function verifyHash($password, $hashedPassword, $user) {
+      $user = $this->toAscii(strtolower($user));
+      
+      return crypt($password, $hashedPassword) == $hashedPassword;
+   }
+   
+   // Clean string URL
    public function toAscii($str, $replace=array(), $delimiter='-') {
       if( !empty($replace) ) {
          $str = str_replace((array)$replace, ' ', $str);
