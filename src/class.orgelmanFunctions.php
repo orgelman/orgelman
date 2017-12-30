@@ -17,6 +17,7 @@ class orgelmanFunctions {
    
    private $appDevice               = "";
    private $appClient               = "";
+   private $removeGet               = array();
    public function __construct($root="") {
       if($root!="") {
          $this->root = $root;
@@ -57,6 +58,9 @@ class orgelmanFunctions {
       $this->path                   = $path;
    }
    
+   public function removeGet($get) {
+      $this->removeGet[] = $get;
+   }
    public function get_domain($root="",$path="",$lang="") {
       $this->server                 = new stdClass();
       $this->server->root           = "";
@@ -224,7 +228,16 @@ class orgelmanFunctions {
                   }
                }
             }
+            
             if(!empty($_GET)) {
+               foreach($this->removeGet as $remo) {
+                  if(isset($_GET[$remo])) {
+                     unset($_GET[$remo]);
+                  }
+                  if(isset($this->server->get[$remo])) {
+                     unset($this->server->get[$remo]);
+                  }
+               }
                foreach($_GET as $key => $get) {
                   if(isset($this->server->get[$key])) { 
                   } else {
@@ -245,11 +258,6 @@ class orgelmanFunctions {
       $this->server->vars        = $afterQustion;
       $this->server->URI         = ltrim($_SERVER["REQUEST_URI"],"/");
          
-      if ((substr($this->server->URI, 0, strlen($this->server->dir)) == $this->server->dir) && ($this->server->language!="")) {
-         if(substr($this->server->URI, 0, strlen($this->server->language)) === $this->server->language) {
-            $this->server->URI      = ltrim(substr(trim(trim($_SERVER["REQUEST_URI"],"/")), strlen(trim(trim($this->server->dir.$this->server->language,"/")))),"/");
-         }
-      } 
       
       $uri = $this->server->URI;
       if(trim(trim($this->server->dir,"/")) !="") {
@@ -257,20 +265,58 @@ class orgelmanFunctions {
             $uri = substr($this->server->URI, strlen($this->server->dir));
          }
       }
-      if(strpos($this->server->URI, '?') !== false) {
-         $uri = substr($uri, 0, strpos($uri, "?"));
+      $this->server->URI = $uri;
+      $this->server->languageStr = "";
+      if($this->server->language!="") {
+         $ex = explode("/",$this->server->URI);
+         if(strlen($ex[0]) == 2) {
+            $this->server->languageStr = $ex[0];
+         }
+         if(substr($this->server->URI, 0, strlen($this->server->language)) === $this->server->language) {
+            $this->server->URI      = ltrim(substr(trim(trim($_SERVER["REQUEST_URI"],"/")), strlen(trim(trim($this->server->dir.$this->server->language,"/")))),"/");
+         }
+      } else {
+         $ex = explode("/",$this->server->URI);
+         if(strlen($ex[0]) == 2) {
+            $this->server->languageStr = $ex[0];
+            unset($ex[0]);
+         }
+         $exp = implode("/",$ex);
+         $this->server->URI = $exp;
       }
       
-      if(strtolower(trim($uri,"/")) == strtolower(trim($this->server->language,"/"))) {
-         $uri = "";
+      if(strpos($this->server->URI, '?') !== false) {
+         $this->server->URI = substr($this->server->URI, 0, strpos($this->server->URI, "?"));
+      }
+      
+      if(strtolower(trim($this->server->URI,"/")) == strtolower(trim($this->server->language,"/"))) {
+         $this->server->URI = "";
+      }
+      if($this->server->vars!="") {
+         $newvar = array();
+         foreach(explode("&",$this->server->vars) as $vars) {
+            $exp = explode("=",$vars);
+            foreach($this->removeGet as $remo) {
+               if($exp[0]!=$remo) {
+                  $newvar[] = $vars;
+               }
+            }
+         }
+         $newvars = implode("&",$newvar);
+         if($newvars!="") {
+            $this->server->vars = "?".$newvars;
+         } else {
+            $this->server->vars = "";
+         }
       }
       
       $this->root                   = $this->server->root;
       $this->path                   = $this->server->dir;
       
-      $this->server->URI            = $uri."?".$this->server->vars;
+      $this->server->URI            = $this->server->URI.$this->server->vars;
       $this->server->domain         = trim($this->server->domain.$this->server->dir,"/")."/";
-      $this->server->full           = $this->server->domain.$this->server->language.$uri;
+      $this->server->full           = $this->server->domain.$this->server->language.$this->server->URI;
+      
       
       return $this->server;
    }
