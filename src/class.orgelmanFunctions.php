@@ -361,6 +361,19 @@ class orgelmanFunctions {
       return $q;
    }
    
+   public function isBot($ua="") {
+      $ret = false;
+      if($ua=="") {
+         $ua = $this->get_client_ua();
+      }
+      foreach (json_decode(file_get_contents(dirname(__FILE__).'/../lib/bots.json')) as $num => $bot) {
+         if(strpos(preg_replace("/[^A-Za-z0-9?!]/",'',strtolower($ua)), preg_replace("/[^A-Za-z0-9?!]/",'',strtolower(($bot->pattern)))) !== FALSE) {
+            $ret = "#".$num.": ".$bot->pattern;
+         }
+      }
+      
+      return $ret;
+   }
    
    public function botTrap($input,$subject="",$fa="",$style="",$nojs=false) {
       $u                = uniqid();
