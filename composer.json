@@ -26,6 +26,7 @@
    "autoload": {
       "classmap": [
          "src/class.orgelmanFunctions.php",
+         "src/class.debug.php",
          "src/class.sql.php",
          "src/class.text.php"
       ]
