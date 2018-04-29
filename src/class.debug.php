@@ -1,5 +1,5 @@
 <?php
-function debugNiceErrorHandler($errno, $errstr, $errfile, $errline) {
+function Orgelman_debugNiceErrorHandler($errno, $errstr, $errfile, $errline) {
    global $globalErrorLog;
    $date = "[".date(constant("DEBUG_ERRORHANDLER_DATEFORMAT"))."] ";
    $uid  = str_repeat(' ',constant("DEBUG_ERRORHANDLER_INDENT"))."[ID: ".constant("DEBUG_ERRORHANDLER_UID")."]";
@@ -50,7 +50,7 @@ function debugNiceErrorHandler($errno, $errstr, $errfile, $errline) {
       echo "\n".$errstr."\n";
    }
 }
-function debugRichErrorHandler($errno, $errstr, $errfile, $errline) {
+function Orgelman_debugRichErrorHandler($errno, $errstr, $errfile, $errline) {
    global $globalErrorLog;
    $date = "[".date(constant("DEBUG_ERRORHANDLER_DATEFORMAT"))."] ";
    $uid  = str_repeat(' ',constant("DEBUG_ERRORHANDLER_INDENT"))."[ID: ".constant("DEBUG_ERRORHANDLER_UID")."]";
@@ -103,7 +103,7 @@ function debugRichErrorHandler($errno, $errstr, $errfile, $errline) {
    }
 }
 
-class debug {
+class orgelmanDebug {
    private $foreground_colors = array();
    private $background_colors = array();
    
@@ -200,10 +200,10 @@ class debug {
    }
    public function set($state=true) {
       if($state==true) {
-         set_error_handler('debugRichErrorHandler');
+         set_error_handler('Orgelman_debugRichErrorHandler');
          $this->state = $state;
       } else {
-         set_error_handler('debugNiceErrorHandler');
+         set_error_handler('Orgelman_debugNiceErrorHandler');
          $this->state = $state;
       }
       return $this->state;
