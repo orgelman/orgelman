@@ -9,6 +9,9 @@
 $ds  = DIRECTORY_SEPARATOR;
 $dir = __dir__.$ds;
 
+if(file_exists($dir."src".$ds."class.debug.php")) {
+   require_once ($dir."src".$ds."class.debug.php"); 
+}
 if(file_exists($dir."include".$ds."autoload.php")) {
    require_once ($dir."include".$ds."autoload.php"); 
 }
