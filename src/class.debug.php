@@ -1,4 +1,13 @@
-<?php
+<?php 
+/**
+ * @package orgelman/orgelman
+ * @link    https://github.com/orgelman/orgelman/
+ * @author  Tobias Jonson <git@orgelman.systems>
+ * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
+ */
+
+if(get_included_files()[0]==__FILE__){header("HTTP/1.1 403 Forbidden");die('<h1 style="font-family:arial;">Error 403: Forbidden</h1>');} 
+
 function Orgelman_debugNiceErrorHandler($errno, $errstr, $errfile, $errline) {
    global $globalErrorLog;
    $date = "[".date(constant("DEBUG_ERRORHANDLER_DATEFORMAT"))."] ";
