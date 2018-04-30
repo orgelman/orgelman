@@ -62,11 +62,10 @@ class orgelmanDebug {
       if($this->is()) {
          $ds = constant("DIRECTORY_SEPARATOR");
          $path = $this->logPath.$ds.date("Y").$ds.date("m").$ds.date("d").$ds;
-         echo $this->logPath;
-         exit();
          if(!file_exists($path)) {
             mkdir($path, 0777, true);
          }
+
          $logFile = fopen($path.date("U").uniqid("_log_").".log", "w") or die("Unable to open file!");
          fwrite($logFile, $this->printDebug());
          fclose($logFile);
