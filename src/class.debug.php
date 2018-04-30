@@ -8,124 +8,6 @@
 
 if(get_included_files()[0]==__FILE__){header("HTTP/1.1 403 Forbidden");die('<h1 style="font-family:arial;">Error 403: Forbidden</h1>');} 
 
-function Orgelman_debugNiceErrorHandler($errno, $errstr, $errfile, $errline) {
-   global $globalErrorLog;
-   global $globalErrorArr;
-   $errid = $errstr.$errfile.$errline;
-   if((isset($globalErrorArr)) && (is_array($globalErrorArr))) { } else {
-      $globalErrorArr = array();
-   }
-   
-   $date = "[".date(constant("DEBUG_ERRORHANDLER_DATEFORMAT"))."] ";
-   $uid  = str_repeat(' ',constant("DEBUG_ERRORHANDLER_INDENT"))."[ID: ".constant("DEBUG_ERRORHANDLER_UID")."]";
-      
-   //get backtrace
-   $calls = debug_backtrace();
-   $time = number_format((microtime(true) - constant("DEBUG_ERRORHANDLER_START")), 6);
-   $back = debug_backtrace()[0];
-      
-   if(strlen($date) > strlen($uid)) {
-      $spac = str_repeat(' ',strlen($date));
-   } else {
-      $spac = str_repeat(' ',strlen($uid));
-   }
-   
-   $str  = $date.'After '.$time.' seconds | FILE: '.$back["file"].' | LINE: '.$back["line"]."\n";
-   $i = 0;
-   foreach($calls as $call) {
-      $i++;
-      if((isset($call["line"])) && (isset($call["function"])) && (isset($call["file"]))) {
-         if($uid!="") {
-            $spa = $uid.str_repeat(' ',strlen($date)-strlen($uid));
-            $uid = "";
-         } else {
-            $spa = str_repeat(' ',strlen($date));
-         }
-         $str .= $spa.$i.': CALLED BY: function: '.$call["function"].'() | '.$call["file"].' | LINE: '.$call["line"]."\n";
-      }
-   }
-   $str .= $spac.$errstr;
-   
-   if((defined("DEBUG_ERRORHANDLER_PATH")) && (!in_array($errid,$globalErrorArr))) {
-      $ds = constant("DIRECTORY_SEPARATOR");
-      $path = constant("DEBUG_ERRORHANDLER_PATH").$ds."error".$ds;
-      if(!file_exists($path)) {
-         mkdir($path, 0777, true);
-      }
-      $logFile = fopen($path.date("U").uniqid("_err_").".log", "w") or die("Unable to open file!");
-      fwrite($logFile, $str);
-      fclose($logFile);
-   }
-   $globalErrorArr[] = $errid;
-   $globalErrorLog[] = strip_tags($str);
-   if(($errno==E_USER_ERROR) || ($errno==E_STRICT) || ($errno==E_ALL)) {
-      error_log(strip_tags($str));
-      header("HTTP/1.1 500 Internal Server Error");
-      die($str);
-   } else {
-      echo "\n".$errstr."\n";
-   }
-}
-function Orgelman_debugRichErrorHandler($errno, $errstr, $errfile, $errline) {
-   global $globalErrorLog;
-   global $globalErrorArr;
-   $errid = $errstr.$errfile.$errline;
-   if((isset($globalErrorArr)) && (is_array($globalErrorArr))) { } else {
-      $globalErrorArr = array();
-   }
-   
-   $date = "[".date(constant("DEBUG_ERRORHANDLER_DATEFORMAT"))."] ";
-   $uid  = str_repeat(' ',constant("DEBUG_ERRORHANDLER_INDENT"))."[ID: ".constant("DEBUG_ERRORHANDLER_UID")."]";
-      
-   //get backtrace
-   $calls = debug_backtrace();
-   $time = number_format((microtime(true) - constant("DEBUG_ERRORHANDLER_START")), 6);
-   $back = debug_backtrace()[0];
-      
-   if(strlen($date) > strlen($uid)) {
-      $spac = str_repeat(' ',strlen($date));
-   } else {
-      $spac = str_repeat(' ',strlen($uid));
-   }
-   
-   $str  = $date.'After '.$time.' seconds | FILE: '.$back["file"].' | LINE: '.$back["line"]."\n";
-   $i = 0;
-   foreach($calls as $call) {
-      $i++;
-      if((isset($call["line"])) && (isset($call["function"])) && (isset($call["file"]))) {
-         if($uid!="") {
-            $spa = $uid.str_repeat(' ',strlen($date)-strlen($uid));
-            $uid = "";
-         } else {
-            $spa = str_repeat(' ',strlen($date));
-         }
-         $str .= $spa.$i.': CALLED BY: function: '.$call["function"].'() | '.$call["file"].' | LINE: '.$call["line"]."\n";
-      }
-   }
-   $str .= $spac.$errstr;
-   
-   if((defined("DEBUG_ERRORHANDLER_PATH")) && (!in_array($errid,$globalErrorArr))) {
-      $ds = constant("DIRECTORY_SEPARATOR");
-      $path = constant("DEBUG_ERRORHANDLER_PATH").$ds."error".$ds;
-      if(!file_exists($path)) {
-         mkdir($path, 0777, true);
-      }
-      $logFile = fopen($path.date("U").uniqid("_err_").".log", "w") or die("Unable to open file!");
-      fwrite($logFile, $str);
-      fclose($logFile);
-   }
-   $globalErrorArr[] = $errid;
-   $str = "<pre>".$str."</pre>";
-   $globalErrorLog[] = strip_tags($str);
-   if(($errno==E_USER_ERROR) || ($errno==E_STRICT) || ($errno==E_ALL)) {
-      error_log(strip_tags($str));
-      header("HTTP/1.1 500 Internal Server Error");
-      die($str);
-   } else {
-      echo "\n\n\n".$str."\n\n\n";
-   }
-}
-
 class orgelmanDebug {
    private $foreground_colors = array();
    private $background_colors = array();
@@ -183,7 +65,7 @@ class orgelmanDebug {
          if(!file_exists($path)) {
             mkdir($path, 0777, true);
          }
-         $logFile = fopen($path.date("U").uniqid("_log_").".html", "w") or die("Unable to open file!");
+         $logFile = fopen($path.date("U").uniqid("_log_").".log", "w") or die("Unable to open file!");
          fwrite($logFile, $this->printDebug());
          fclose($logFile);
       }
@@ -202,7 +84,7 @@ class orgelmanDebug {
                   if(is_dir($dir."/".$object)) {
                      $this->rrmdir($dir."/".$object,$i++);
                   } else {
-                     if((file_exists($dir."/".$object)) && ($object!="log.log") && (time()-filemtime($dir."/".$object) > ($this->time)) && ((pathinfo($dir."/".$object, PATHINFO_EXTENSION) == "log") || (pathinfo($dir."/".$object, PATHINFO_EXTENSION) == "html"))) {
+                     if((file_exists($dir."/".$object)) && ($object!="log.log") && (time()-filemtime($dir."/".$object) > ($this->time)) && (pathinfo($dir."/".$object, PATHINFO_EXTENSION) == "log")) {
                         unlink($dir."/".$object); 
                      }
                   }
@@ -472,5 +354,123 @@ class orgelmanDebug {
       $colored_string .=  $string . "\033[0m";
 
       return $colored_string;
+   }
+}
+
+function Orgelman_debugNiceErrorHandler($errno, $errstr, $errfile, $errline) {
+   global $globalErrorLog;
+   global $globalErrorArr;
+   $errid = $errstr.$errfile.$errline;
+   if((isset($globalErrorArr)) && (is_array($globalErrorArr))) { } else {
+      $globalErrorArr = array();
+   }
+   
+   $date = "[".date(constant("DEBUG_ERRORHANDLER_DATEFORMAT"))."] ";
+   $uid  = str_repeat(' ',constant("DEBUG_ERRORHANDLER_INDENT"))."[ID: ".constant("DEBUG_ERRORHANDLER_UID")."]";
+      
+   //get backtrace
+   $calls = debug_backtrace();
+   $time = number_format((microtime(true) - constant("DEBUG_ERRORHANDLER_START")), 6);
+   $back = debug_backtrace()[0];
+      
+   if(strlen($date) > strlen($uid)) {
+      $spac = str_repeat(' ',strlen($date));
+   } else {
+      $spac = str_repeat(' ',strlen($uid));
+   }
+   
+   $str  = $date.'After '.$time.' seconds | FILE: '.$back["file"].' | LINE: '.$back["line"]."\n";
+   $i = 0;
+   foreach($calls as $call) {
+      $i++;
+      if((isset($call["line"])) && (isset($call["function"])) && (isset($call["file"]))) {
+         if($uid!="") {
+            $spa = $uid.str_repeat(' ',strlen($date)-strlen($uid));
+            $uid = "";
+         } else {
+            $spa = str_repeat(' ',strlen($date));
+         }
+         $str .= $spa.$i.': CALLED BY: function: '.$call["function"].'() | '.$call["file"].' | LINE: '.$call["line"]."\n";
+      }
+   }
+   $str .= $spac.$errstr;
+   
+   if((defined("DEBUG_ERRORHANDLER_PATH")) && (!in_array($errid,$globalErrorArr))) {
+      $ds = constant("DIRECTORY_SEPARATOR");
+      $path = constant("DEBUG_ERRORHANDLER_PATH").$ds."error".$ds;
+      if(!file_exists($path)) {
+         mkdir($path, 0777, true);
+      }
+      $logFile = fopen($path.date("U").uniqid("_err_").".log", "w") or die("Unable to open file!");
+      fwrite($logFile, $str);
+      fclose($logFile);
+   }
+   $globalErrorArr[] = $errid;
+   $globalErrorLog[] = strip_tags($str);
+   if(($errno==E_USER_ERROR) || ($errno==E_STRICT) || ($errno==E_ALL)) {
+      error_log(strip_tags($str));
+      header("HTTP/1.1 500 Internal Server Error");
+      die($str);
+   } else {
+      echo "\n".$errstr."\n";
+   }
+}
+function Orgelman_debugRichErrorHandler($errno, $errstr, $errfile, $errline) {
+   global $globalErrorLog;
+   global $globalErrorArr;
+   $errid = $errstr.$errfile.$errline;
+   if((isset($globalErrorArr)) && (is_array($globalErrorArr))) { } else {
+      $globalErrorArr = array();
+   }
+   
+   $date = "[".date(constant("DEBUG_ERRORHANDLER_DATEFORMAT"))."] ";
+   $uid  = str_repeat(' ',constant("DEBUG_ERRORHANDLER_INDENT"))."[ID: ".constant("DEBUG_ERRORHANDLER_UID")."]";
+      
+   //get backtrace
+   $calls = debug_backtrace();
+   $time = number_format((microtime(true) - constant("DEBUG_ERRORHANDLER_START")), 6);
+   $back = debug_backtrace()[0];
+      
+   if(strlen($date) > strlen($uid)) {
+      $spac = str_repeat(' ',strlen($date));
+   } else {
+      $spac = str_repeat(' ',strlen($uid));
+   }
+   
+   $str  = $date.'After '.$time.' seconds | FILE: '.$back["file"].' | LINE: '.$back["line"]."\n";
+   $i = 0;
+   foreach($calls as $call) {
+      $i++;
+      if((isset($call["line"])) && (isset($call["function"])) && (isset($call["file"]))) {
+         if($uid!="") {
+            $spa = $uid.str_repeat(' ',strlen($date)-strlen($uid));
+            $uid = "";
+         } else {
+            $spa = str_repeat(' ',strlen($date));
+         }
+         $str .= $spa.$i.': CALLED BY: function: '.$call["function"].'() | '.$call["file"].' | LINE: '.$call["line"]."\n";
+      }
+   }
+   $str .= $spac.$errstr;
+   
+   if((defined("DEBUG_ERRORHANDLER_PATH")) && (!in_array($errid,$globalErrorArr))) {
+      $ds = constant("DIRECTORY_SEPARATOR");
+      $path = constant("DEBUG_ERRORHANDLER_PATH").$ds."error".$ds;
+      if(!file_exists($path)) {
+         mkdir($path, 0777, true);
+      }
+      $logFile = fopen($path.date("U").uniqid("_err_").".log", "w") or die("Unable to open file!");
+      fwrite($logFile, $str);
+      fclose($logFile);
+   }
+   $globalErrorArr[] = $errid;
+   $str = "<pre>".$str."</pre>";
+   $globalErrorLog[] = strip_tags($str);
+   if(($errno==E_USER_ERROR) || ($errno==E_STRICT) || ($errno==E_ALL)) {
+      error_log(strip_tags($str));
+      header("HTTP/1.1 500 Internal Server Error");
+      die($str);
+   } else {
+      echo "\n\n\n".$str."\n\n\n";
    }
 }
