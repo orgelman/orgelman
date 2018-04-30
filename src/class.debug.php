@@ -62,6 +62,8 @@ class orgelmanDebug {
       if($this->is()) {
          $ds = constant("DIRECTORY_SEPARATOR");
          $path = $this->logPath.$ds.date("Y").$ds.date("m").$ds.date("d").$ds;
+         echo $this->logPath;
+         exit();
          if(!file_exists($path)) {
             mkdir($path, 0777, true);
          }
@@ -112,9 +114,12 @@ class orgelmanDebug {
    public function setPath($path) {
       $path = str_replace(array("/","\\"),constant("DIRECTORY_SEPARATOR"),$path);
       if(file_exists($path)) {
-         $this->logPath = str_replace(array("/","\\"),constant("DIRECTORY_SEPARATOR"),$path);
-         define("DEBUG_ERRORHANDLER_PATH",$this->logPath);
+         
+      } else {
+         mkdir($path, 0777, true);
       }
+      $this->logPath = str_replace(array("/","\\"),constant("DIRECTORY_SEPARATOR"),$path);
+      define("DEBUG_ERRORHANDLER_PATH",$this->logPath);
    }
    public function set($state=true) {
       if($state==true) {
