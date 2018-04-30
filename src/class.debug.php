@@ -10,6 +10,12 @@ if(get_included_files()[0]==__FILE__){header("HTTP/1.1 403 Forbidden");die('<h1 
 
 function Orgelman_debugNiceErrorHandler($errno, $errstr, $errfile, $errline) {
    global $globalErrorLog;
+   global $globalErrorArr;
+   $errid = $errstr.$errfile.$errline;
+   if((isset($globalErrorArr)) && (is_array($globalErrorArr))) { } else {
+      $globalErrorArr = array();
+   }
+   
    $date = "[".date(constant("DEBUG_ERRORHANDLER_DATEFORMAT"))."] ";
    $uid  = str_repeat(' ',constant("DEBUG_ERRORHANDLER_INDENT"))."[ID: ".constant("DEBUG_ERRORHANDLER_UID")."]";
       
@@ -40,7 +46,7 @@ function Orgelman_debugNiceErrorHandler($errno, $errstr, $errfile, $errline) {
    }
    $str .= $spac.$errstr;
    
-   if(defined("DEBUG_ERRORHANDLER_PATH")) {
+   if((defined("DEBUG_ERRORHANDLER_PATH")) && (!in_array($errid,$globalErrorArr))) {
       $ds = constant("DIRECTORY_SEPARATOR");
       $path = constant("DEBUG_ERRORHANDLER_PATH").$ds."error".$ds;
       if(!file_exists($path)) {
@@ -50,6 +56,7 @@ function Orgelman_debugNiceErrorHandler($errno, $errstr, $errfile, $errline) {
       fwrite($logFile, $str);
       fclose($logFile);
    }
+   $globalErrorArr[] = $errid;
    $globalErrorLog[] = strip_tags($str);
    if(($errno==E_USER_ERROR) || ($errno==E_STRICT) || ($errno==E_ALL)) {
       error_log(strip_tags($str));
@@ -61,6 +68,12 @@ function Orgelman_debugNiceErrorHandler($errno, $errstr, $errfile, $errline) {
 }
 function Orgelman_debugRichErrorHandler($errno, $errstr, $errfile, $errline) {
    global $globalErrorLog;
+   global $globalErrorArr;
+   $errid = $errstr.$errfile.$errline;
+   if((isset($globalErrorArr)) && (is_array($globalErrorArr))) { } else {
+      $globalErrorArr = array();
+   }
+   
    $date = "[".date(constant("DEBUG_ERRORHANDLER_DATEFORMAT"))."] ";
    $uid  = str_repeat(' ',constant("DEBUG_ERRORHANDLER_INDENT"))."[ID: ".constant("DEBUG_ERRORHANDLER_UID")."]";
       
@@ -91,7 +104,7 @@ function Orgelman_debugRichErrorHandler($errno, $errstr, $errfile, $errline) {
    }
    $str .= $spac.$errstr;
    
-   if(defined("DEBUG_ERRORHANDLER_PATH")) {
+   if((defined("DEBUG_ERRORHANDLER_PATH")) && (!in_array($errid,$globalErrorArr))) {
       $ds = constant("DIRECTORY_SEPARATOR");
       $path = constant("DEBUG_ERRORHANDLER_PATH").$ds."error".$ds;
       if(!file_exists($path)) {
@@ -101,6 +114,7 @@ function Orgelman_debugRichErrorHandler($errno, $errstr, $errfile, $errline) {
       fwrite($logFile, $str);
       fclose($logFile);
    }
+   $globalErrorArr[] = $errid;
    $str = "<pre>".$str."</pre>";
    $globalErrorLog[] = strip_tags($str);
    if(($errno==E_USER_ERROR) || ($errno==E_STRICT) || ($errno==E_ALL)) {
@@ -121,6 +135,7 @@ class orgelmanDebug {
    
    private $state             = true;
    private $size              = (1024 * 25);
+   private $time              = (60 * 60);
    
    //set time
    public function __construct($start=null,$path="") {
@@ -187,7 +202,7 @@ class orgelmanDebug {
                   if((is_dir($dir."/".$object)) && ($object!="error")) {
                      $this->rrmdir($dir."/".$object,$i++);
                   } else {
-                     if(($object!="log.log") && (time()-filemtime($dir."/".$object) > 60 * 6)) {
+                     if(($object!="log.log") && (time()-filemtime($dir."/".$object) > ($this->time))) {
                         unlink($dir."/".$object); 
                      }
                   }
@@ -200,6 +215,18 @@ class orgelmanDebug {
       }
    }
 
+   public function setTime($time) {
+      if((is_numeric($time)) && ($time>0)){
+         $this->time = $time;
+      }
+      return $this->time;
+   }
+   public function setSize($size) {
+      if((is_numeric($size)) && ($size>0)){
+         $this->size = $size;
+      }
+      return $this->size;
+   }
    public function setPath($path) {
       $path = str_replace(array("/","\\"),constant("DIRECTORY_SEPARATOR"),$path);
       if(file_exists($path)) {
