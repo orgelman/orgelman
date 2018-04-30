@@ -199,10 +199,10 @@ class orgelmanDebug {
             $objects = scandir($dir); 
             foreach ($objects as $object) { 
                if ($object != "." && $object != "..") { 
-                  if((is_dir($dir."/".$object)) && ($object!="error")) {
+                  if(is_dir($dir."/".$object)) {
                      $this->rrmdir($dir."/".$object,$i++);
                   } else {
-                     if(($object!="log.log") && (time()-filemtime($dir."/".$object) > ($this->time))) {
+                     if((file_exists($dir."/".$object)) && ($object!="log.log") && (time()-filemtime($dir."/".$object) > ($this->time)) && ((pathinfo($dir."/".$object, PATHINFO_EXTENSION) == "log") || (pathinfo($dir."/".$object, PATHINFO_EXTENSION) == "html"))) {
                         unlink($dir."/".$object); 
                      }
                   }
