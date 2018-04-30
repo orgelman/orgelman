@@ -6,10 +6,15 @@
 
 ```
 <?php 
+$debug = new orgelmanDebug("",__DIR__."/logs/");
+$debug->set(true);
+$debug->log("DEBUG FUNCTION DONE");
+
 $_Orgelman = new orgelmanFunctions();
 
 echo $_Orgelman->toAscii("Hello World");
 ?>
+
 ```
 
 ## Installation
