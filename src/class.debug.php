@@ -16,8 +16,6 @@ class orgelmanDebug {
    private $indent            = 3;
    
    private $state             = true;
-   private $size              = (1024 * 25);
-   private $time              = (60 * 60);
    
    //set time
    public function __construct($start=null,$path="") {
@@ -26,6 +24,9 @@ class orgelmanDebug {
          $this->scriptStartTime  = $start;
       }
       $this->log                 = array();
+      
+      $this->size              = (1024 * 25);
+      $this->time              = (60 * 60);
       
       // Set colors for cli
       $this->initColoredString();
@@ -59,7 +60,7 @@ class orgelmanDebug {
    }
    public function __destruct() {
       $this->log("DEBUG FUNCTION DESTRUCTED",true);
-      if($this->is()) {
+      if(($this->is()) && (file_exists(constant("DEBUG_ERRORHANDLER_PATH")."log.log"))) {
          $ds = constant("DIRECTORY_SEPARATOR");
          $path = $this->logPath.$ds.date("Y").$ds.date("m").$ds.date("d").$ds;
          if(!file_exists($path)) {
@@ -102,12 +103,14 @@ class orgelmanDebug {
       if((is_numeric($time)) && ($time>0)){
          $this->time = $time;
       }
+      $this->log("Time limit set: ".$time);
       return $this->time;
    }
    public function setSize($size) {
       if((is_numeric($size)) && ($size>0)){
          $this->size = $size;
       }
+      $this->log("Size limit set: ".$time);
       return $this->size;
    }
    public function setPath($path) {
@@ -119,6 +122,8 @@ class orgelmanDebug {
       }
       $this->logPath = str_replace(array("/","\\"),constant("DIRECTORY_SEPARATOR"),$path);
       define("DEBUG_ERRORHANDLER_PATH",$this->logPath);
+      $this->log("Path set: ".$path);
+      return $path;
    }
    public function set($state=true) {
       if($state==true) {
@@ -128,10 +133,19 @@ class orgelmanDebug {
          set_error_handler('Orgelman_debugNiceErrorHandler');
          $this->state = $state;
       }
+      $this->log("Debug state : ".$state);
       return $this->state;
    }
    public function is() {
       return $this->state;
+   }
+   
+   public function time() {
+      $date = "[".date($this->dateFormat)."] ";
+      $uid  = "[ID: ".$this->uid."] ";
+      $time = number_format((microtime(true) - $this->scriptStartTime), 6);
+      $back = debug_backtrace()[0];
+      return $date.$uid.'After '.$time.' seconds | FILE: '.$back["file"].' | LINE: '.$back["line"];
    }
    
    //Save in debug log
@@ -184,7 +198,11 @@ class orgelmanDebug {
       
       $this->cli[] = $str;
       $this->log[] = "\n".preg_replace("/\\033(\S{2,5})m/", "", $str);
-      return $str."\n";
+      if(php_sapi_name()=="cli") {
+         return $str."\n";
+      } else {
+         return preg_replace("/\\033(\S{2,5})m/", "", $str)."\n";
+      }
    }
    
    public function writeLog($log,$space="",$ext="",$i=0) {
@@ -383,7 +401,15 @@ function Orgelman_debugNiceErrorHandler($errno, $errstr, $errfile, $errline) {
       $spac = str_repeat(' ',strlen($uid));
    }
    
-   $str  = $date.'After '.$time.' seconds | FILE: '.$back["file"].' | LINE: '.$back["line"]."\n";
+   $arr[]  = $date.'After '.$time.' seconds';
+   if(isset($back["file"])) {
+      $arr[]  = 'FILE: '.$back["file"];
+   }
+   if(isset($back["line"])) {
+      $arr[]  = 'LINE: '.$back["line"];
+   }
+   
+   $str  = implode(" | ",$arr)."\n";
    $i = 0;
    foreach($calls as $call) {
       $i++;
@@ -441,7 +467,15 @@ function Orgelman_debugRichErrorHandler($errno, $errstr, $errfile, $errline) {
       $spac = str_repeat(' ',strlen($uid));
    }
    
-   $str  = $date.'After '.$time.' seconds | FILE: '.$back["file"].' | LINE: '.$back["line"]."\n";
+   $arr[]  = $date.'After '.$time.' seconds';
+   if(isset($back["file"])) {
+      $arr[]  = 'FILE: '.$back["file"];
+   }
+   if(isset($back["line"])) {
+      $arr[]  = 'LINE: '.$back["line"];
+   }
+   
+   $str  = implode(" | ",$arr)."\n";
    $i = 0;
    foreach($calls as $call) {
       $i++;
