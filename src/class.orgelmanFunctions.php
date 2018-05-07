@@ -61,7 +61,7 @@ class orgelmanFunctions {
    public function removeGet($get) {
       $this->removeGet[] = $get;
    }
-   public function get_domain($root="",$path="",$lang="") {
+   public function get_domain($root="",$path="",$lang="",$domain="") {
       $this->server                 = new stdClass();
       $this->server->root           = "";
       $this->server->domain         = "";
@@ -77,6 +77,12 @@ class orgelmanFunctions {
       $this->server->subFolder      = array();
       $this->server->get            = array();
       $this->server->post           = array();
+      
+      $afterQustion = "";
+      if($lang!="") {
+         $lang = trim($lang,"/")."/";
+      }
+      $this->server->language    = ltrim($lang,"/");
       
       if($root=="") {
          if($this->root!="") {
@@ -100,9 +106,6 @@ class orgelmanFunctions {
          $path = $path."/";
       }
       $path = trim($path,"/")."/";
-      if($lang!="") {
-         $lang = trim($lang,"/")."/";
-      }
       
       $this->server->root = trim(str_replace(array("/","\\"),DIRECTORY_SEPARATOR,DIRECTORY_SEPARATOR.trim($root,"/").DIRECTORY_SEPARATOR));
       if(!file_exists($this->server->root)) {
@@ -163,7 +166,6 @@ class orgelmanFunctions {
          }
          
          $this->server->URI         = ltrim($_SERVER["REQUEST_URI"],"/");
-         $this->server->language    = ltrim($lang,"/");
          
          if (substr($this->server->URI, 0, strlen($this->server->dir)) == $this->server->dir) {
             $this->server->URI      = ltrim(substr(trim(trim($_SERVER["REQUEST_URI"],"/")), strlen(trim(trim($this->server->dir,"/")))),"/");
@@ -187,11 +189,11 @@ class orgelmanFunctions {
                $this->server->dir     .= $dom."/";
             }
          } 
+         
          if(isset($_SERVER["REQUEST_URI"])) {
             if (substr(trim($_SERVER["REQUEST_URI"],"/"), 0, strlen($this->server->dir)) == trim($this->server->dir,"/")) {
                $_SERVER["REQUEST_URI"]      = ltrim(substr(trim(trim($_SERVER["REQUEST_URI"],"/")), strlen(trim(trim($this->server->dir,"/")))),"/");
             } 
-            $afterQustion = "";
             if(strpos($_SERVER["REQUEST_URI"], '?') !== false) {
                $qust  = substr($_SERVER["REQUEST_URI"], strpos($_SERVER["REQUEST_URI"], "?") + 1);
                $quest = explode("?",$qust);
@@ -256,7 +258,9 @@ class orgelmanFunctions {
          }
       }
       $this->server->vars        = $afterQustion;
-      $this->server->URI         = ltrim($_SERVER["REQUEST_URI"],"/");
+      if(isset($_SERVER["REQUEST_URI"])) {
+         $this->server->URI         = ltrim($_SERVER["REQUEST_URI"],"/");
+      }
          
       
       $uri = $this->server->URI;
@@ -317,6 +321,9 @@ class orgelmanFunctions {
       $this->server->domain         = trim($this->server->domain.$this->server->dir,"/")."/";
       $this->server->full           = $this->server->domain.$this->server->language.$this->server->URI;
       
+      if((trim($this->server->domain,"/") == "") && ($domain!="")) {
+         $this->server->domain = trim($domain,"/")."/";
+      }
       
       return $this->server;
    }
