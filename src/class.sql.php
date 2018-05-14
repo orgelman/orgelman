@@ -294,18 +294,26 @@ class orgelmanSQL {
    }
    public function SQLBackup($tables = '*', $path = '', $title = '') {
       $return = "";
-      if($tables!='*') {
-         $tables = "`".constant("SQL_PREFIX").$tables."`";
-      }
-      if($tables == '*') {
+      if((is_array($tables)) || (is_object($tables))) {
+         $t = $tables;
          $tables = array();
-         $result = $this->DBh->query('SHOW TABLES');
-         while($row = mysqli_fetch_row($result)) {
-            $tables[] = $row[0];
+         foreach($t as $ta) {
+            $tables[] = "`".constant("SQL_PREFIX").$ta."`";
          }
       } else {
-         $tables = is_array($tables) ? $tables : explode(',',$tables);
-      }
+         if($tables!='*') {
+            $t = $tables;
+            $tables = array();
+            $tables[] = "`".constant("SQL_PREFIX").$t."`";
+         }
+         if($tables == '*') {
+            $tables = array();
+            $result = $this->DBh->query('SHOW TABLES');
+            while($row = mysqli_fetch_row($result)) {
+               $tables[] = $row[0];
+            }
+         }
+      } 
 
       foreach($tables as $table) {
          $result = $this->DBh->query('SELECT * FROM '.$table);
